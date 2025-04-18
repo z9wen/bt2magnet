@@ -6,17 +6,34 @@ import {
   Button, 
   CircularProgress, 
   Alert,
-  useTheme
+  useTheme,
+  FormControlLabel,
+  Checkbox,
+  Collapse,
+  Chip,
+  FormGroup,
+  FormHelperText,
+  TextField
 } from '@mui/material';
 import { 
   CloudUpload as CloudUploadIcon,
-  InsertDriveFile as FileIcon 
+  InsertDriveFile as FileIcon,
+  Add as AddIcon
 } from '@mui/icons-material';
 import { parseTorrentFile, generateMagnetLink } from '../utils/magnetUtils';
 
 interface TorrentUploaderProps {
   onMagnetGenerated: (link: string, source: 'file' | 'input', infoHash: string, name?: string) => void;
 }
+
+// 预定义的常用Tracker列表
+const DEFAULT_TRACKERS = [
+  'udp://tracker.opentrackr.org:1337/announce',
+  'udp://open.tracker.cl:1337/announce',
+  'udp://9.rarbg.com:2810/announce',
+  'udp://tracker.openbittorrent.com:6969/announce',
+  'http://tracker.openbittorrent.com:80/announce'
+];
 
 const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -25,6 +42,12 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
   const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const theme = useTheme();
+  
+  // Tracker相关的状态
+  const [addTrackers, setAddTrackers] = useState<boolean>(false);
+  const [customTracker, setCustomTracker] = useState<string>('');
+  const [customTrackers, setCustomTrackers] = useState<string[]>([]);
+  const [selectedDefaultTrackers, setSelectedDefaultTrackers] = useState<string[]>([...DEFAULT_TRACKERS]);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -55,6 +78,35 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
       await processTorrentFile(files[0]);
     }
   };
+  
+  // 处理添加自定义Tracker
+  const handleAddCustomTracker = () => {
+    if (!customTracker.trim()) return;
+    
+    // 简单验证tracker格式
+    if (!customTracker.includes('://')) {
+      setError('Tracker格式无效，请使用如 http://example.com/announce 或 udp://example.com:1234/announce 的格式');
+      return;
+    }
+    
+    // 添加到自定义tracker列表
+    setCustomTrackers(prev => [...prev, customTracker.trim()]);
+    setCustomTracker('');
+  };
+
+  // 删除自定义tracker
+  const handleRemoveCustomTracker = (tracker: string) => {
+    setCustomTrackers(prev => prev.filter(t => t !== tracker));
+  };
+
+  // 切换默认tracker的选择状态
+  const handleToggleDefaultTracker = (tracker: string) => {
+    setSelectedDefaultTrackers(prev => 
+      prev.includes(tracker) 
+        ? prev.filter(t => t !== tracker) 
+        : [...prev, tracker]
+    );
+  };
 
   const processTorrentFile = async (file: File) => {
     // 检查文件类型
@@ -71,8 +123,14 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
       // 解析种子文件
       const torrentInfo = await parseTorrentFile(file);
       
-      // 生成磁力链接
-      const magnetLink = generateMagnetLink(torrentInfo);
+      // 准备所有选定的trackers
+      let trackers: string[] = [];
+      if (addTrackers) {
+        trackers = [...selectedDefaultTrackers, ...customTrackers];
+      }
+      
+      // 生成磁力链接，提供tracker列表
+      const magnetLink = generateMagnetLink(torrentInfo, undefined, addTrackers, trackers);
       
       // 调用回调函数
       onMagnetGenerated(magnetLink, 'file', torrentInfo.infoHash, torrentInfo.name);
@@ -155,6 +213,80 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
           </Typography>
         </Box>
       )}
+      
+      {/* Tracker选项 */}
+      <FormGroup sx={{ mt: 3, mb: 3 }}>
+        <FormControlLabel 
+          control={
+            <Checkbox 
+              checked={addTrackers}
+              onChange={(e) => setAddTrackers(e.target.checked)}
+            />
+          } 
+          label="添加Tracker (提高下载速度)"
+        />
+        
+        <Collapse in={addTrackers} sx={{ mt: 2 }}>
+          <Box>
+            <Typography variant="subtitle2" gutterBottom>
+              常用Tracker
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+              {DEFAULT_TRACKERS.map(tracker => (
+                <Chip
+                  key={tracker}
+                  label={tracker.split('://')[0] + '://...'}
+                  onClick={() => handleToggleDefaultTracker(tracker)}
+                  onDelete={selectedDefaultTrackers.includes(tracker) ? 
+                    () => handleToggleDefaultTracker(tracker) : undefined}
+                  color={selectedDefaultTrackers.includes(tracker) ? "primary" : "default"}
+                  variant={selectedDefaultTrackers.includes(tracker) ? "filled" : "outlined"}
+                  sx={{ maxWidth: '100%' }}
+                />
+              ))}
+            </Box>
+            
+            <Typography variant="subtitle2" gutterBottom>
+              自定义Tracker
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="添加自定义tracker (例如: http://example.com/announce)"
+                value={customTracker}
+                onChange={(e) => setCustomTracker(e.target.value)}
+              />
+              <Button 
+                variant="contained" 
+                size="small"
+                onClick={handleAddCustomTracker}
+                startIcon={<AddIcon />}
+              >
+                添加
+              </Button>
+            </Box>
+            
+            {customTrackers.length > 0 && (
+              <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {customTrackers.map(tracker => (
+                  <Chip
+                    key={tracker}
+                    label={tracker}
+                    onDelete={() => handleRemoveCustomTracker(tracker)}
+                    color="secondary"
+                    sx={{ maxWidth: '100%' }}
+                  />
+                ))}
+              </Box>
+            )}
+            
+            <FormHelperText>
+              添加Tracker可以提高下载速度，但可能会被某些网络拦截
+            </FormHelperText>
+          </Box>
+        </Collapse>
+      </FormGroup>
 
       {error && (
         <Alert severity="error" sx={{ mt: 2 }}>

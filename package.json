@@ -14,12 +14,16 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
+    "bencode": "^4.0.0",
+    "crypto-js": "^4.2.0",
     "parse-torrent": "^11.0.18",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/bencode": "^2.0.4",
+    "@types/crypto-js": "^4.2.2",
     "@types/parse-torrent": "^5.8.7",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
