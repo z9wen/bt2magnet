@@ -18,11 +18,11 @@ const Footer = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="body2" color="text.secondary" align="center">
-          &copy; {currentYear} BT2Magnet - 简单易用的种子转磁力链接工具
+          &copy; {currentYear} BT2Magnet - Simple and Easy-to-Use Torrent to Magnet Link Tool
         </Typography>
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
           <Link 
-            href="https://github.com/yourusername/bt2magnet"
+            href="https://github.com/z9wen/bt2magnet"
             target="_blank" 
             rel="noopener noreferrer"
             color="inherit"
@@ -31,7 +31,7 @@ const Footer = () => {
             GitHub
           </Link>
           {' • '}
-          个人使用工具 - 仅用于学习交流
+          Personal Use Tool - For Learning and Communication Only
         </Typography>
       </Container>
     </Box>

@@ -46,7 +46,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // 格式化日期
+  // Format date
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleString();
@@ -58,7 +58,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2000);
     } catch (err) {
-      console.error('复制到剪贴板失败:', err);
+      console.error('Failed to copy to clipboard:', err);
     }
   };
 
@@ -74,7 +74,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <TextField
-          placeholder="搜索历史记录..."
+          placeholder="Search history..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           variant="outlined"
@@ -89,7 +89,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
             endAdornment: searchTerm && (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label="清除搜索"
+                  aria-label="Clear search"
                   onClick={() => setSearchTerm('')}
                   edge="end"
                   size="small"
@@ -108,7 +108,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
           onClick={() => setConfirmOpen(true)}
           disabled={history.length === 0}
         >
-          清空历史
+          Clear History
         </Button>
       </Box>
       
@@ -165,7 +165,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
                               variant="outlined"
                             />
                             <Chip 
-                              label={record.source === 'file' ? '文件上传' : 'InfoHash/磁力链接'} 
+                              label={record.source === 'file' ? 'File Upload' : 'InfoHash/Magnet Link'} 
                               size="small" 
                               variant="outlined"
                             />
@@ -178,20 +178,20 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
                   {!isMobile && (
                     <ListItemSecondaryAction>
                       <Stack direction="row" spacing={1}>
-                        <Tooltip title={copiedId === record.id ? "已复制!" : "复制链接"}>
+                        <Tooltip title={copiedId === record.id ? "Copied!" : "Copy Link"}>
                           <IconButton 
                             edge="end" 
-                            aria-label="复制" 
+                            aria-label="Copy" 
                             onClick={() => handleCopyLink(record.magnetLink, record.id)}
                             color={copiedId === record.id ? "success" : "default"}
                           >
                             {copiedId === record.id ? <CheckIcon /> : <CopyIcon />}
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="使用该记录">
+                        <Tooltip title="Use This Record">
                           <IconButton 
                             edge="end" 
-                            aria-label="使用" 
+                            aria-label="Use" 
                             onClick={() => onSelect(record)}
                             color="primary"
                           >
@@ -213,7 +213,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
                         color={copiedId === record.id ? "success" : "primary"}
                         variant="text"
                       >
-                        复制
+                        Copy
                       </Button>
                       <Button
                         size="small"
@@ -222,7 +222,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
                         color="primary"
                         variant="contained"
                       >
-                        使用
+                        Use
                       </Button>
                     </Stack>
                   </Box>
@@ -244,7 +244,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
         >
           <HistoryIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
           <Typography variant="body1" align="center" color="text.secondary">
-            {searchTerm ? '没有找到匹配的历史记录' : '暂无历史记录'}
+            {searchTerm ? 'No matching history records found' : 'No history records yet'}
           </Typography>
           {searchTerm && (
             <Button 
@@ -253,26 +253,26 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
               onClick={() => setSearchTerm('')}
               sx={{ mt: 2 }}
             >
-              清除搜索
+              Clear Search
             </Button>
           )}
         </Paper>
       )}
 
-      {/* 确认对话框 */}
+      {/* Confirmation dialog */}
       <Dialog
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
       >
-        <DialogTitle>确认清空历史记录</DialogTitle>
+        <DialogTitle>Confirm Clear History</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            确定要清空所有转换历史记录吗？此操作无法撤销。
+            Are you sure you want to clear all conversion history? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmOpen(false)} color="primary">
-            取消
+            Cancel
           </Button>
           <Button 
             onClick={() => {
@@ -281,7 +281,7 @@ const HistoryList = ({ history, onSelect, onClear }: HistoryListProps) => {
             }} 
             color="error"
           >
-            确认清空
+            Confirm Clear
           </Button>
         </DialogActions>
       </Dialog>

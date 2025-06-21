@@ -38,7 +38,7 @@ import ResultDisplay from './components/ResultDisplay';
 import HistoryList from './components/HistoryList';
 import Footer from './components/Footer';
 
-// 创建主题上下文
+// Create theme context
 export const ThemeContext = createContext<{
   mode: 'light' | 'dark';
   toggleTheme: () => void;
@@ -48,7 +48,7 @@ export const ThemeContext = createContext<{
 });
 
 function App() {
-  // 状态管理
+  // State management
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>(storageUtils.loadThemeMode());
   const [history, setHistory] = useState<MagnetRecord[]>(storageUtils.loadHistory());
   const [magnetLink, setMagnetLink] = useState<string>('');
@@ -57,37 +57,37 @@ function App() {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [showHistory, setShowHistory] = useState<boolean>(false);
 
-  // 创建主题
+  // Create theme
   const theme = useMemo(() => createAppTheme(themeMode), [themeMode]);
   
-  // 响应式设计
+  // Responsive design
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // 主题切换函数
+  // Theme toggle function
   const toggleTheme = () => {
     const newMode = themeMode === 'light' ? 'dark' : 'light';
     setThemeMode(newMode);
     storageUtils.saveThemeMode(newMode);
   };
 
-  // 处理磁力链接生成
+  // Handle magnet link generation
   const handleMagnetGenerated = (link: string, source: 'file' | 'input', infoHash: string, name?: string) => {
     setMagnetLink(link);
     setCurrentInfoHash(infoHash);
     
-    // 添加到历史记录
+    // Add to history
     const newRecord: MagnetRecord = {
       id: Date.now().toString(),
       magnetLink: link,
       source,
-      name: name || '未命名',
+      name: name || 'Unnamed',
       infoHash,
       createdAt: new Date().toISOString(),
     };
     
     const updatedHistory = [newRecord, ...history.filter(record => 
       record.infoHash !== infoHash
-    )].slice(0, 50); // 只保留最近50条记录，且不重复
+    )].slice(0, 50); // Keep only the latest 50 records, without duplicates
     
     setHistory(updatedHistory);
     storageUtils.saveHistory(updatedHistory);
@@ -96,7 +96,7 @@ function App() {
   const handleHistorySelect = (record: MagnetRecord) => {
     setMagnetLink(record.magnetLink);
     setCurrentInfoHash(record.infoHash);
-    setShowHistory(false); // 选择历史记录后返回主界面
+    setShowHistory(false); // Return to main interface after selecting history
   };
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -108,12 +108,12 @@ function App() {
   };
 
   const drawerItems = [
-    { text: '首页', icon: <HomeIcon />, onClick: () => { setShowHistory(false); toggleDrawer(false); } },
-    { text: '历史记录', icon: <HistoryIcon />, onClick: () => { setShowHistory(true); toggleDrawer(false); } },
-    { text: '关于', icon: <InfoIcon />, onClick: () => { window.open('https://github.com/yourusername/bt2magnet', '_blank'); toggleDrawer(false); } },
+    { text: 'Home', icon: <HomeIcon />, onClick: () => { setShowHistory(false); toggleDrawer(false); } },
+    { text: 'History', icon: <HistoryIcon />, onClick: () => { setShowHistory(true); toggleDrawer(false); } },
+    { text: 'About', icon: <InfoIcon />, onClick: () => { window.open('https://github.com/z9wen/bt2magnet', '_blank'); toggleDrawer(false); } },
   ];
 
-  // 保存历史记录到本地存储
+  // Save history to local storage
   useEffect(() => {
     storageUtils.saveHistory(history);
   }, [history]);
@@ -177,7 +177,7 @@ function App() {
             </Toolbar>
           </AppBar>
           
-          {/* 侧边抽屉 (移动端) */}
+          {/* Side drawer (mobile) */}
           <Drawer
             anchor="left"
             open={drawerOpen}
@@ -201,7 +201,7 @@ function App() {
                     <ListItemIcon>
                       {themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
                     </ListItemIcon>
-                    <ListItemText primary={themeMode === 'dark' ? '切换到浅色模式' : '切换到深色模式'} />
+                    <ListItemText primary={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'} />
                   </ListItemButton>
                 </ListItem>
               </List>
@@ -212,7 +212,7 @@ function App() {
             {showHistory ? (
               <Paper sx={{ p: 3, mb: 4 }}>
                 <Typography variant="h5" component="h2" gutterBottom align="center">
-                  转换历史
+                  Conversion History
                 </Typography>
                 <HistoryList 
                   history={history} 
@@ -224,7 +224,7 @@ function App() {
               <>
                 <Paper sx={{ p: 3, mb: 4 }}>
                   <Typography variant="h5" component="h2" gutterBottom align="center">
-                    BT种子转磁力链接
+                    BitTorrent to Magnet Link
                   </Typography>
                   
                   <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
@@ -234,8 +234,8 @@ function App() {
                       centered
                       variant={isMobile ? "fullWidth" : "standard"}
                     >
-                      <Tab label="上传种子文件" />
-                      <Tab label="输入InfoHash/磁力链接" />
+                                      <Tab label="Upload Torrent File" />
+                <Tab label="Enter InfoHash/Magnet Link" />
                     </Tabs>
                   </Box>
                   

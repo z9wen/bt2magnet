@@ -32,28 +32,28 @@ const ResultDisplay = ({ magnetLink, infoHash }: ResultDisplayProps) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('复制到剪贴板失败:', err);
+      console.error('Failed to copy to clipboard:', err);
     }
   };
 
   const handleDownload = () => {
     try {
-      // 创建一个a标签并模拟点击下载
+      // Create an anchor tag and simulate click to download
       const a = document.createElement('a');
       a.href = magnetLink;
       a.click();
     } catch (error) {
-      console.error('打开磁力链接失败:', error);
+      console.error('Failed to open magnet link:', error);
     }
   };
 
-  // 判断磁力链接是否有效
+  // Check if magnet link is valid
   const isValidMagnet = magnetLink.startsWith('magnet:?xt=urn:btih:');
 
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="h6" component="h3" gutterBottom color="primary">
-        生成的磁力链接
+        Generated Magnet Link
       </Typography>
       
       <Box sx={{ mb: 3 }}>
@@ -67,12 +67,12 @@ const ResultDisplay = ({ magnetLink, infoHash }: ResultDisplayProps) => {
             readOnly: true,
             endAdornment: (
               <Tooltip
-                title={copied ? "已复制!" : "复制链接"}
+                title={copied ? "Copied!" : "Copy Link"}
                 TransitionComponent={Fade}
                 TransitionProps={{ timeout: 600 }}
               >
                 <IconButton
-                  aria-label="复制到剪贴板"
+                  aria-label="Copy to clipboard"
                   onClick={copyToClipboard}
                   size="small"
                   sx={{ mr: 1 }}
@@ -119,7 +119,7 @@ const ResultDisplay = ({ magnetLink, infoHash }: ResultDisplayProps) => {
           disabled={!isValidMagnet}
           sx={{ flex: 1 }}
         >
-          {isValidMagnet ? "使用磁力链接下载" : "无效的磁力链接"}
+          {isValidMagnet ? "Download with Magnet Link" : "Invalid Magnet Link"}
         </Button>
         
         <Button
@@ -128,7 +128,7 @@ const ResultDisplay = ({ magnetLink, infoHash }: ResultDisplayProps) => {
           onClick={copyToClipboard}
           sx={{ flex: 1 }}
         >
-          复制链接
+          Copy Link
         </Button>
       </Stack>
     </Box>

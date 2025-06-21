@@ -26,7 +26,7 @@ interface InfoHashInputProps {
   onMagnetGenerated: (link: string, source: 'file' | 'input', infoHash: string, name?: string) => void;
 }
 
-// 预定义的常用Tracker列表
+// Predefined common tracker list
 const DEFAULT_TRACKERS = [
   'udp://tracker.opentrackr.org:1337/announce',
   'udp://open.tracker.cl:1337/announce',
@@ -41,7 +41,7 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
-  // Tracker相关的状态
+  // Tracker-related state
   const [addTrackers, setAddTrackers] = useState<boolean>(false);
   const [customTracker, setCustomTracker] = useState<string>('');
   const [customTrackers, setCustomTrackers] = useState<string[]>([]);
@@ -61,27 +61,27 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
     if (error) setError(null);
   };
 
-  // 处理添加自定义Tracker
+  // Handle adding custom tracker
   const handleAddCustomTracker = () => {
     if (!customTracker.trim()) return;
     
-    // 简单验证tracker格式
+    // Simple tracker format validation
     if (!customTracker.includes('://')) {
-      setError('Tracker格式无效，请使用如 http://example.com/announce 或 udp://example.com:1234/announce 的格式');
+      setError('Invalid tracker format. Please use formats like http://example.com/announce or udp://example.com:1234/announce');
       return;
     }
     
-    // 添加到自定义tracker列表
+    // Add to custom tracker list
     setCustomTrackers(prev => [...prev, customTracker.trim()]);
     setCustomTracker('');
   };
 
-  // 删除自定义tracker
+  // Remove custom tracker
   const handleRemoveCustomTracker = (tracker: string) => {
     setCustomTrackers(prev => prev.filter(t => t !== tracker));
   };
 
-  // 切换默认tracker的选择状态
+  // Toggle default tracker selection state
   const handleToggleDefaultTracker = (tracker: string) => {
     setSelectedDefaultTrackers(prev => 
       prev.includes(tracker) 
@@ -94,7 +94,7 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
     e.preventDefault();
     
     if (!input.trim()) {
-      setError('请输入InfoHash或磁力链接');
+      setError('Please enter InfoHash or magnet link');
       return;
     }
     
@@ -102,27 +102,27 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
     setError(null);
     
     try {
-      // 解析输入
+      // Parse input
       const parsed = parseInput(input.trim());
       
-      // 准备所有选定的trackers
+      // Prepare all selected trackers
       let trackers: string[] = [];
       if (addTrackers) {
         trackers = [...selectedDefaultTrackers, ...customTrackers];
       }
       
-      // 生成磁力链接，提供tracker列表
+      // Generate magnet link with tracker list
       const magnetLink = generateMagnetLink(parsed, torrentName || undefined, addTrackers, trackers);
       
-      // 调用回调函数
+      // Call callback function
       onMagnetGenerated(magnetLink, 'input', parsed.infoHash, torrentName || parsed.name);
       
-      // 成功后清空输入
+      // Clear inputs after success
       setInput('');
       setTorrentName('');
     } catch (err) {
-      console.error('生成磁力链接时出错:', err);
-      setError(err instanceof Error ? err.message : '生成磁力链接时出错');
+      console.error('Error generating magnet link:', err);
+      setError(err instanceof Error ? err.message : 'Error generating magnet link');
     } finally {
       setIsSubmitting(false);
     }
@@ -131,16 +131,16 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
       <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-        输入40位InfoHash或完整的磁力链接
+        Enter 40-character InfoHash or complete magnet link
       </Typography>
       
       <TextField
         fullWidth
         variant="outlined"
-        label="InfoHash或磁力链接"
+        label="InfoHash or Magnet Link"
         value={input}
         onChange={handleInputChange}
-        placeholder="例如: e9776f4626e2dbed3338b0e0545193c2a4146c6f 或 magnet:?xt=urn:btih:..."
+        placeholder="e.g.: e9776f4626e2dbed3338b0e0545193c2a4146c6f or magnet:?xt=urn:btih:..."
         disabled={isSubmitting}
         error={Boolean(error)}
         InputProps={{
@@ -152,7 +152,7 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
           endAdornment: input && (
             <InputAdornment position="end">
               <IconButton
-                aria-label="清除输入"
+                aria-label="Clear input"
                 onClick={clearInput}
                 edge="end"
                 size="small"
@@ -168,15 +168,15 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
       <TextField
         fullWidth
         variant="outlined"
-        label="种子名称 (可选)"
+        label="Torrent Name (Optional)"
         value={torrentName}
         onChange={handleNameChange}
-        placeholder="为磁力链接添加名称"
+        placeholder="Add name for magnet link"
         disabled={isSubmitting}
         sx={{ mb: 3 }}
       />
       
-      {/* Tracker选项 */}
+      {/* Tracker options */}
       <FormGroup sx={{ mb: 3 }}>
         <FormControlLabel 
           control={
@@ -185,13 +185,13 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
               onChange={(e) => setAddTrackers(e.target.checked)}
             />
           } 
-          label="添加Tracker (提高下载速度)"
+          label="Add Trackers (Improve Download Speed)"
         />
         
         <Collapse in={addTrackers} sx={{ mt: 2 }}>
           <Box>
             <Typography variant="subtitle2" gutterBottom>
-              常用Tracker
+              Common Trackers
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
               {DEFAULT_TRACKERS.map(tracker => (
@@ -209,13 +209,13 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
             </Box>
             
             <Typography variant="subtitle2" gutterBottom>
-              自定义Tracker
+              Custom Trackers
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <TextField
                 fullWidth
                 size="small"
-                placeholder="添加自定义tracker (例如: http://example.com/announce)"
+                placeholder="Add custom tracker (e.g.: http://example.com/announce)"
                 value={customTracker}
                 onChange={(e) => setCustomTracker(e.target.value)}
               />
@@ -225,7 +225,7 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
                 onClick={handleAddCustomTracker}
                 startIcon={<AddIcon />}
               >
-                添加
+                Add
               </Button>
             </Box>
             
@@ -244,7 +244,7 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
             )}
             
             <FormHelperText>
-              添加Tracker可以提高下载速度，但可能会被某些网络拦截
+              Adding trackers can improve download speed, but may be blocked by some networks
             </FormHelperText>
           </Box>
         </Collapse>
@@ -258,7 +258,7 @@ const InfoHashInput = ({ onMagnetGenerated }: InfoHashInputProps) => {
         startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
         sx={{ py: 1.2 }}
       >
-        {isSubmitting ? '处理中...' : '生成磁力链接'}
+        {isSubmitting ? 'Processing...' : 'Generate Magnet Link'}
       </Button>
 
       {error && (

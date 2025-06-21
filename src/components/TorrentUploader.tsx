@@ -26,7 +26,7 @@ interface TorrentUploaderProps {
   onMagnetGenerated: (link: string, source: 'file' | 'input', infoHash: string, name?: string) => void;
 }
 
-// 预定义的常用Tracker列表
+// Predefined common tracker list
 const DEFAULT_TRACKERS = [
   'udp://tracker.opentrackr.org:1337/announce',
   'udp://open.tracker.cl:1337/announce',
@@ -43,7 +43,7 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const theme = useTheme();
   
-  // Tracker相关的状态
+  // Tracker-related state
   const [addTrackers, setAddTrackers] = useState<boolean>(false);
   const [customTracker, setCustomTracker] = useState<string>('');
   const [customTrackers, setCustomTrackers] = useState<string[]>([]);
@@ -79,27 +79,27 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
     }
   };
   
-  // 处理添加自定义Tracker
+  // Handle adding custom tracker
   const handleAddCustomTracker = () => {
     if (!customTracker.trim()) return;
     
-    // 简单验证tracker格式
+    // Simple tracker format validation
     if (!customTracker.includes('://')) {
-      setError('Tracker格式无效，请使用如 http://example.com/announce 或 udp://example.com:1234/announce 的格式');
+      setError('Invalid tracker format. Please use formats like http://example.com/announce or udp://example.com:1234/announce');
       return;
     }
     
-    // 添加到自定义tracker列表
+    // Add to custom tracker list
     setCustomTrackers(prev => [...prev, customTracker.trim()]);
     setCustomTracker('');
   };
 
-  // 删除自定义tracker
+  // Remove custom tracker
   const handleRemoveCustomTracker = (tracker: string) => {
     setCustomTrackers(prev => prev.filter(t => t !== tracker));
   };
 
-  // 切换默认tracker的选择状态
+  // Toggle default tracker selection state
   const handleToggleDefaultTracker = (tracker: string) => {
     setSelectedDefaultTrackers(prev => 
       prev.includes(tracker) 
@@ -109,9 +109,9 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
   };
 
   const processTorrentFile = async (file: File) => {
-    // 检查文件类型
+    // Check file type
     if (!file.name.endsWith('.torrent')) {
-      setError('请上传 .torrent 文件');
+      setError('Please upload a .torrent file');
       return;
     }
 
@@ -120,26 +120,26 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
     setFileName(file.name);
 
     try {
-      // 解析种子文件
+      // Parse torrent file
       const torrentInfo = await parseTorrentFile(file);
       
-      // 准备所有选定的trackers
+      // Prepare all selected trackers
       let trackers: string[] = [];
       if (addTrackers) {
         trackers = [...selectedDefaultTrackers, ...customTrackers];
       }
       
-      // 生成磁力链接，提供tracker列表
+      // Generate magnet link with tracker list
       const magnetLink = generateMagnetLink(torrentInfo, undefined, addTrackers, trackers);
       
-      // 调用回调函数
+      // Call callback function
       onMagnetGenerated(magnetLink, 'file', torrentInfo.infoHash, torrentInfo.name);
     } catch (err) {
-      console.error('处理种子文件时出错:', err);
-      setError(err instanceof Error ? err.message : '处理种子文件时出错');
+      console.error('Error processing torrent file:', err);
+      setError(err instanceof Error ? err.message : 'Error processing torrent file');
     } finally {
       setIsLoading(false);
-      // 重置文件输入
+      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -196,10 +196,10 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <CloudUploadIcon color="primary" sx={{ fontSize: 48, mb: 2 }} />
             <Typography variant="body1" gutterBottom>
-              点击上传或拖放文件到此处
+              Click to upload or drag and drop files here
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              支持 .torrent 文件
+              Supports .torrent files
             </Typography>
           </Box>
         )}
@@ -209,12 +209,12 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
           <CircularProgress size={24} sx={{ mr: 1 }} />
           <Typography variant="body2" color="textSecondary">
-            处理中...
+            Processing...
           </Typography>
         </Box>
       )}
       
-      {/* Tracker选项 */}
+              {/* Tracker options */}
       <FormGroup sx={{ mt: 3, mb: 3 }}>
         <FormControlLabel 
           control={
@@ -223,13 +223,13 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
               onChange={(e) => setAddTrackers(e.target.checked)}
             />
           } 
-          label="添加Tracker (提高下载速度)"
+          label="Add Trackers (Improve Download Speed)"
         />
         
         <Collapse in={addTrackers} sx={{ mt: 2 }}>
           <Box>
             <Typography variant="subtitle2" gutterBottom>
-              常用Tracker
+              Common Trackers
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
               {DEFAULT_TRACKERS.map(tracker => (
@@ -247,13 +247,13 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
             </Box>
             
             <Typography variant="subtitle2" gutterBottom>
-              自定义Tracker
+              Custom Trackers
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <TextField
                 fullWidth
                 size="small"
-                placeholder="添加自定义tracker (例如: http://example.com/announce)"
+                placeholder="Add custom tracker (e.g.: http://example.com/announce)"
                 value={customTracker}
                 onChange={(e) => setCustomTracker(e.target.value)}
               />
@@ -263,7 +263,7 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
                 onClick={handleAddCustomTracker}
                 startIcon={<AddIcon />}
               >
-                添加
+                                  Add
               </Button>
             </Box>
             
@@ -282,7 +282,7 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
             )}
             
             <FormHelperText>
-              添加Tracker可以提高下载速度，但可能会被某些网络拦截
+              Adding trackers can improve download speed, but may be blocked by some networks
             </FormHelperText>
           </Box>
         </Collapse>
@@ -301,7 +301,7 @@ const TorrentUploader = ({ onMagnetGenerated }: TorrentUploaderProps) => {
           onClick={handleButtonClick}
           disabled={isLoading}
         >
-          选择种子文件
+          Select Torrent File
         </Button>
       </Box>
     </Box>

@@ -1,6 +1,6 @@
 import { createTheme, PaletteMode } from '@mui/material';
 
-// 创建自定义主题
+// Create custom theme
 export const createAppTheme = (mode: PaletteMode) => {
   return createTheme({
     palette: {

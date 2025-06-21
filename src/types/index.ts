@@ -1,7 +1,7 @@
 export interface MagnetRecord {
     id: string;
     magnetLink: string;
-    source: 'file' | 'input'; // 'file' 或 'input'
+    source: 'file' | 'input'; // 'file' or 'input'
     name: string;
     infoHash: string;
     createdAt: string;
