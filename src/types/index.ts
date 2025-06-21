@@ -10,3 +10,14 @@ export interface MagnetRecord {
   export interface ThemeMode {
     mode: 'light' | 'dark';
   }
+
+  export interface TorrentInstance {
+    infoHash: string;
+    name?: string;
+    announce?: string[];
+    files?: Array<{
+      path: string;
+      length: number;
+    }>;
+    length?: number;
+  }
