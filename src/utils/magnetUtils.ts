@@ -131,7 +131,7 @@ async function parseBencodeBuffer(buffer: ArrayBuffer): Promise<TorrentInstance>
     
     // 计算InfoHash (info字段的SHA1哈希值)
     const infoBytes = encodeBencode(info);
-    const hashBuffer = await crypto.subtle.digest('SHA-1', infoBytes);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', infoBytes as ArrayBuffer);
     const infoHash = Array.from(new Uint8Array(hashBuffer))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
@@ -231,7 +231,7 @@ function decodeBencode(data: Uint8Array, offset = 0): { value: unknown; offset: 
     while (pos < data.length && data[pos] !== 101) { // 'e' = 101
       const keyResult = decodeBencode(data, pos);
       const valueResult = decodeBencode(data, keyResult.offset);
-      const key = new TextDecoder().decode(keyResult.value);
+      const key = new TextDecoder().decode(keyResult.value as Uint8Array);
       dict[key] = valueResult.value;
       pos = valueResult.offset;
     }
@@ -250,6 +250,7 @@ function decodeBencode(data: Uint8Array, offset = 0): { value: unknown; offset: 
 }
 
 // 简化的Bencode编码器（仅用于计算InfoHash）
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function encodeBencode(data: any): Uint8Array {
   if (typeof data === 'number') {
     const str = `i${data}e`;

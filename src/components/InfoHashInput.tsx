@@ -13,8 +13,7 @@ import {
   Collapse,
   Chip,
   FormGroup,
-  FormHelperText,
-  Paper
+  FormHelperText
 } from '@mui/material';
 import { 
   Search as SearchIcon,

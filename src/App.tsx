@@ -31,7 +31,7 @@ import {
 } from '@mui/icons-material';
 import { createAppTheme } from './theme';
 import { storageUtils } from './utils/magnetUtils';
-import { MagnetRecord, ThemeMode } from './types';
+import { MagnetRecord } from './types';
 import TorrentUploader from './components/TorrentUploader';
 import InfoHashInput from './components/InfoHashInput';
 import ResultDisplay from './components/ResultDisplay';
