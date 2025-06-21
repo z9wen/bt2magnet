@@ -2,35 +2,6 @@
 
 A modern, web-based BitTorrent to Magnet link converter built with React, TypeScript, and Material-UI. Convert .torrent files to magnet links or generate magnet links from InfoHash values with an intuitive drag-and-drop interface.
 
-## ✨ Features
-
-- **🎯 Multiple Input Methods**
-  - Upload .torrent files via drag-and-drop or file picker
-  - Direct InfoHash input (40-character hexadecimal)
-  - Parse existing magnet links
-
-- **🔗 Magnet Link Generation**
-  - Generate clean magnet links from torrent files
-  - Extract and display torrent metadata (name, size, files)
-  - Optional tracker list customization
-
-- **📱 Modern UI/UX**
-  - Responsive design that works on desktop and mobile
-  - Dark/Light theme toggle with system preference detection
-  - Material Design components for consistent interface
-  - Real-time file validation and error handling
-
-- **💾 History Management**
-  - Automatic saving of conversion history
-  - Quick access to previously generated magnet links
-  - Local storage persistence across sessions
-
-- **🔧 Advanced Features**
-  - Custom tracker addition and management
-  - Pre-configured list of popular public trackers
-  - InfoHash validation and formatting
-  - File structure display for multi-file torrents
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -69,7 +40,7 @@ npm run build
 
 The built files will be available in the `dist` directory.
 
-## 🎮 Usage
+##  Usage
 
 ### Converting Torrent Files
 
@@ -93,7 +64,7 @@ The built files will be available in the `dist` directory.
 - Click on any history item to restore it to the main interface
 - History is automatically saved to browser local storage
 
-## 🛠 Technical Stack
+##  Technical Stack
 
 - **Frontend Framework**: React 19 with TypeScript
 - **UI Library**: Material-UI (MUI) v7
@@ -110,7 +81,7 @@ The built files will be available in the `dist` directory.
 - `parse-torrent` - Torrent file parsing utilities
 - `crypto-js` - Cryptographic functions for hash generation
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 src/
@@ -129,7 +100,7 @@ src/
 └── theme.ts             # Material-UI theme configuration
 ```
 
-## 🔧 Development
+##  Development
 
 ### Available Scripts
 
@@ -145,14 +116,14 @@ src/
 3. **Utilities**: Add helper functions in `src/utils/`
 4. **Styling**: Use Material-UI's `sx` prop or create custom themes
 
-## 🔒 Privacy & Security
+##  Privacy & Security
 
 - **Client-Side Only**: All torrent processing happens in your browser
 - **No Data Upload**: Torrent files are never sent to external servers
 - **Local Storage**: History and preferences are stored locally
 - **Open Source**: Full source code available for review
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -160,24 +131,12 @@ src/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - [Material-UI](https://mui.com/) for the excellent React component library
 - [Vite](https://vitejs.dev/) for the fast build tool
 - [BitTorrent Protocol](https://www.bittorrent.org/beps/bep_0003.html) specification
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](https://github.com/z9wen/bt2magnet/issues) page
-2. Create a new issue with detailed information
-3. Provide browser version and error messages if applicable
-
----
-
-**Made with ❤️ using React and TypeScript**
