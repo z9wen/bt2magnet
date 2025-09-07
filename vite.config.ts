@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // base: '/bt2magnet/',
-  server: {
-    port: 3000,
-  }
+  // server: {
+  //   port: 3000,
+  // }
 })
